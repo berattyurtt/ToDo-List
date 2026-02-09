@@ -7,11 +7,52 @@
     <title>todo-app</title>
   </head>
   <body>
-    <div class="h-screen bg-gray-900 flex items-center justify-center">
-      <h1 class="text-3xl font-bold text-blue-500 underline">
-        Hello World!
-      </h1>
+    <div class="min-h-screen bg-slate-950 text-slate-200 flex items-center justify-center p-4 font-sans">
+      <!--Üstte yazılan ana kapsayıcı-->
+      <div class="w-full max-w-md bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 p-6">
+      <!--Bu üstte yazılan kutu kapsayıcı-->
+        <header class="mb-6 text-center">
+          <h1 class="text-3xl font-bold bg-linear-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+            To Do List
+          </h1>
+          <p class="text-slate-400 text-sm mt-1">What will you do today?</p>
+        </header>
+        <!--Bu header kısmı başlık ve alt başlık içeriyor-->
+        <div class="flex gap-2 mb-6">
+          <input 
+            type="text"
+            id="todo-input"
+            placeholder="Add a task"
+            class="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder:text-slate-600"
+            >
+          <button
+          id="add-btn"
+          class="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-3 rounded-lg transition-colors active:scale-95"
+          >
+            Add
+          </button>
+        </div>
+        <!--Bu kısım input ve add butonunu içeriyor-->
+        <ul id="todo-list" class="space-y-3">
+          <li class="group flex items-center justify-between bg-slate-800/50 p-3 rounded-lg border border-slate-700/50 hover:border-blue-500/30 transition-all">
+            <div class="flex items-center gap-3">
+              <div class="w-5 h-5 rounded-full border-2 border-slate-600 group-hover:border-blue-400 cursor-pointer"></div>
+              <span class="text-slate-300">Example Task</span>
+            </div>
+            <button class="text-slate-500 hover:text-red-400 transition-colors p-1">
+              Delete
+            </button>
+          </li>
+        </ul>
+        <!--Bu kısım görevlerin listelendiği yer-->
+        <div class="mt-6 pt-4 border-t border-slate-800 flex justify-between text-xs text-slate-500">
+          <span id="task-count">1 görev beklemede</span>
+          <button id="clear-btn" class="hover:text-slate-300">Clear All</button>
+        </div>
+        <!--Bu kısım görev sayısını ve clear all butonunu içeriyor-->
+      </div>
     </div>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
