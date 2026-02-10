@@ -7,47 +7,60 @@
     <title>todo-app</title>
   </head>
   <body>
-    <div class="min-h-screen bg-slate-950 text-slate-200 flex items-center justify-center p-4 font-sans">
-      <!--Üstte yazılan ana kapsayıcı-->
-      <div class="w-full max-w-md bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 p-6">
+    <div class="relative min-h-screen w-full bg-slate-950 flex items-center justify-center font-sans overflow-hidden selection:bg-blue-500/30">
+    <div class="absolute inset-0 h-full w-full bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px]"></div>
+    <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-75 w-125 rounded-full bg-blue-600/20 blur-[100px]"></div>  
+    <!--Üstte yazılan ana kapsayıcı-->
+      <div class="relative z-10 w-full max-w-md bg-slate-900/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-800/60 p-6 ring-1 ring-white/10">
       <!--Bu üstte yazılan kutu kapsayıcı-->
         <header class="mb-6 text-center">
-          <h1 class="text-3xl font-bold bg-linear-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+          <h1 class="text-3xl font-pop bg-linear-to-r from-blue-600 to-purple-700 bg-clip-text text-transparent">
             To Do List
           </h1>
           <p class="text-slate-400 text-sm mt-1">What will you do today?</p>
         </header>
         <!--Bu header kısmı başlık ve alt başlık içeriyor-->
-        <div class="flex gap-2 mb-6">
+        <div class="group flex gap-2 mb-6 transition-all">
           <input 
             type="text"
             id="todo-input"
             placeholder="Add a task"
-            class="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder:text-slate-600"
+            class="flex-1 bg-slate-950/50 border border-slate-700/50 rounded-lg px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors placeholder:text-slate-600 hover:border-slate-600"
             >
           <button
           id="add-btn"
-          class="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-3 rounded-lg transition-colors active:scale-95"
+          class="bg-linear-to-r from-blue-600 to-purple-700 hover:bg-blue-500 text-white font-medium px-5 py-3 rounded-lg text-sm transition-all active:scale-95 shadow-lg shadow-blue-600/20 cursor-pointer"
           >
             Add
           </button>
         </div>
         <!--Bu kısım input ve add butonunu içeriyor-->
-        <ul id="todo-list" class="space-y-3">
-          <li class="group flex items-center justify-between bg-slate-800/50 p-3 rounded-lg border border-slate-700/50 hover:border-blue-500/30 transition-all">
-            <div class="flex items-center gap-3">
-              <div class="w-5 h-5 rounded-full border-2 border-slate-600 group-hover:border-blue-400 cursor-pointer"></div>
-              <span class="text-slate-300">Example Task</span>
+        <ul id="todo-list" class="space-y-2 max-h-100 overflow-y-auto pr-2 custom-scrollbar">
+          <li class="group flex items-center justify-between bg-slate-800/40 p-3 rounded-lg border border-transparent hover:border-slate-700 hover:bg-slate-800 transition-all">
+            <div class="flex items-center gap-3 flex-1">
+              <div class="w-4 h-4 rounded-full border border-slate-500 group-hover:border-blue-400 flex items-center justify-center cursor-pointer"></div>
+              <span class="text-slate-300 text-sm group-hover:text-white transition-colors flex-1 cursor-text select-none">Example Task</span>
             </div>
-            <button class="text-slate-500 hover:text-red-400 transition-colors p-1">
-              Delete
-            </button>
+    
+            <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
+              <button class="text-slate-500 hover:text-blue-400 transition-colors p-1" title="Edit">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                </svg>
+              </button>
+
+              <button class="text-slate-500 hover:text-red-400 transition-colors p-1" title="Delete">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                </svg>
+              </button>
+            </div>
           </li>
         </ul>
         <!--Bu kısım görevlerin listelendiği yer-->
-        <div class="mt-6 pt-4 border-t border-slate-800 flex justify-between text-xs text-slate-500">
-          <span id="task-count">1 görev beklemede</span>
-          <button id="clear-btn" class="hover:text-slate-300">Clear All</button>
+        <div class="mt-6 pt-4 border-t border-slate-800/50 flex justify-between items-center text-[10px] text-slate-500 uppercase tracking-wider font-semibold">
+          <span id="task-count">1 task pending</span>
+          <button id="clear-btn" class="hover:text-slate-400 transition-colors">Clear All</button>
         </div>
         <!--Bu kısım görev sayısını ve clear all butonunu içeriyor-->
       </div>
