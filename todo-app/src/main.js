@@ -4,6 +4,10 @@ const todoInput = document.getElementById("todo-input");
 const addBtn = document.getElementById("add-btn");
 //Görevlerin listeleneceği alan
 const todoList = document.getElementById("todo-list");
+//Tamamlanmış görevlerin listeleneceği alan
+const doneTasks = document.getElementById("done-tasks");
+//Tamamlanmış görevler bölümunu içeren div
+const doneSection = document.getElementById("done-section");
 //Görev sayısını gösteren yazı
 const taskCount = document.getElementById("task-count");
 //Görev listesini temizleme butonu
@@ -13,14 +17,19 @@ const clearBtn = document.getElementById("clear-btn");
 //Verileri Kaydetme ve Yükleme (Local Storage)
 function saveData(){
   localStorage.setItem("todoData", todoList.innerHTML);
-  updateTaskCount();
+  localStorage.setItem("doneData", doneTasks.innerHTML);
+  updateUI();
 }
 function loadData(){
   const savedData = localStorage.getItem("todoData");
+  const savedDoneData = localStorage.getItem("doneData");
   if (savedData){
     todoList.innerHTML = savedData;
-    updateTaskCount();
   }
+  if (savedDoneData){
+    doneTasks.innerHTML = savedDoneData;
+  }
+  updateUI();
 }
 
 
@@ -88,14 +97,20 @@ todoInput.addEventListener("keypress", function(e){
 if (clearBtn){
   clearBtn.addEventListener("click", function(){
     todoList.innerHTML = "";
+    doneTasks.innerHTML = ""; //Done Tasks bölümünü de temizle
     saveData();
   });
 }
 
 //Görev sayısını güncelleyen fonksiyon
-function updateTaskCount(){
-  const count = todoList.children.length;
-  taskCount.innerText = `${count} Task Awaiting`;
+function updateUI(){
+  const activeTasks = todoList.children.length;
+  taskCount.innerText = `${activeTasks} Task Awaiting`;
+  if (doneTasks.children.length > 0) {
+  doneSection.classList.remove("hidden"); //Done Tasks bölümü görünür yap
+  } else {
+  doneSection.classList.add("hidden"); //Done Tasks bölümü gizle
+  }
 }
 
 //Drag ve Drop (Sürükle ve Bırak) Özelliği
@@ -143,75 +158,90 @@ function getDragAfterElement(container, y) {
 }
 
 //Görev listesini yönetmek için event delegation tekniği kullanarak tıklama olaylarını dinle
-todoList.addEventListener("click", function(e){
-  const target = e.target; //Tıklanan element
-  const deleteBtn = target.closest(".delete-btn"); //Silme butonu
-  if (deleteBtn){
-    const li = deleteBtn.closest("li"); 
-    li.remove();
-    saveData();
-    return;
-  }
+[todoList, doneTasks].forEach(list => {
+    list.addEventListener("click", function (e) {
+        const target = e.target;
+        
+        // --- SİLME ---
+        const deleteBtn = target.closest(".delete-btn");
+        if (deleteBtn) {
+            const li = deleteBtn.closest("li");
+            li.remove();
+            saveData();
+            return;
+        }
 
-  const checkBtn = target.closest(".check-btn"); //Tik butonu
-  if (checkBtn){
-    const li = checkBtn.closest("li");
-    const taskText = li.querySelector(".task-text");
-    const checkIcon = checkBtn.querySelector(".check-icon");
+        // --- TİK ATMA (GÖREV TRANSFERİ) ---
+        const checkBtn = target.closest(".check-btn");
+        if (checkBtn) {
+            const li = checkBtn.closest("li");
+            const checkIcon = checkBtn.querySelector(".check-icon");
+            const taskText = li.querySelector(".task-text");
 
-    checkBtn.classList.toggle("border-slate-500");
-    checkBtn.classList.toggle("border-blue-500");
-    checkBtn.classList.toggle("bg-blue-500");
+            // Stilleri değiştir
+            checkBtn.classList.toggle("border-slate-500");
+            checkBtn.classList.toggle("border-blue-500");
+            checkBtn.classList.toggle("bg-blue-500");
+            checkIcon.classList.toggle("hidden");
+            taskText.classList.toggle("text-slate-300");
+            taskText.classList.toggle("text-slate-600");
 
-    checkIcon.classList.toggle("hidden");
+            // TRANSFER MANTIĞI
+            if (li.parentElement === todoList) {
+                // Eğer Todo listesindeyse -> Tamamlananlara taşı
+                doneTasks.prepend(li); 
+            } else {
+                // Eğer Tamamlananlardaysa -> Geri Todo listesine taşı
+                todoList.prepend(li);
+            }
 
-    taskText.classList.toggle("text-slate-300"); //Parlak rengi kapat
-    taskText.classList.toggle("text-slate-600"); //Sönük rengi aç
-    saveData();
-    return;
-  }
+            saveData();
+            return;
+        }
 
-  const editBtn = target.closest(".edit-btn"); //Edit butonu
-  if (editBtn){
-    const li = editBtn.closest("li");
-    const taskTextElement = li.querySelector(".task-text");
-    const currentText = taskTextElement.innerText;
+        // --- DÜZENLEME (Sadece Todo listesinde izin verilsin) ---
+        const editBtn = target.closest(".edit-btn");
+        if (editBtn) {
+            const li = editBtn.closest("li");
+            
+            // Tamamlanmış görevler düzenlenemesin (Opsiyonel)
+            if (li.parentElement === doneTasks) {
+                alert("Tamamlanan görevi düzenlemek için önce tiki kaldırın.");
+                return;
+            }
 
-    if (li.querySelector("edit-input")) return;
+            const taskTextElement = li.querySelector(".task-text");
+            const currentText = taskTextElement.innerText;
 
-    taskTextElement.classList.add("hidden");
+            if (li.querySelector(".edit-input")) return;
 
-    const input = document.createElement("input");
-    input.type = "text";
-    input.value = currentText;
-    input.className = "edit-input flex-1 bg-slate-900 border border-blue-500 rounded px-2 py-1 text-white text-sm outline-none";
+            taskTextElement.classList.add("hidden");
 
-    //Input'un sürüklenmesini engelle
-    input.draggable = false;
-    input.addEventListener('click', (e) => {
-      e.stopPropagation(); //Input'a tıklanıldığında tıklama olayının li elementine bulaşmasını engelle
-      e.preventDefault(); //Varsayılan davranışı engelle (örneğin, sürükleme olayını tetiklememek için)
+            const input = document.createElement("input");
+            input.type = "text";
+            input.value = currentText;
+            input.className = "edit-input flex-1 bg-slate-900 border border-blue-500 rounded px-2 py-1 text-white text-sm outline-none";
+            input.draggable = false;
+            
+            taskTextElement.parentNode.insertBefore(input, taskTextElement);
+            input.focus();
+
+            function saveEdit() {
+                const newText = input.value.trim();
+                if (newText !== "") {
+                    taskTextElement.innerText = newText;
+                }
+                input.remove();
+                taskTextElement.classList.remove("hidden");
+                saveData();
+            }
+
+            input.addEventListener("blur", saveEdit);
+            input.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") saveEdit();
+            });
+        }
     });
-
-
-    taskTextElement.parentNode.insertBefore(input, taskTextElement);
-    input.focus();
-
-    function saveEdit() {
-      const newText = input.value.trim();
-      if (newText !== "") {
-        taskTextElement.innerText = newText;
-      }
-      input.remove();
-      taskTextElement.classList.remove("hidden");
-      saveData();
-    }
-    //Kaydetme olayları
-    input.addEventListener("blur", saveEdit);
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") saveEdit();
-    });
-  }
 });
 
 //Sayfa yüklendiğinde kaydedilmiş görevleri yükle
