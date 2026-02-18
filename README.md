@@ -2,7 +2,8 @@
 
 A minimal, fast, and responsive To-Do List application built with Vanilla JavaScript and Tailwind CSS.
 
-![Project Screenshot]<img width="1366" height="604" alt="image" src="https://github.com/user-attachments/assets/cbb52886-226d-41f6-8a63-6d7721599647" />
+Project Screenshot<img width="1366" height="602" alt="image" src="https://github.com/user-attachments/assets/8496bc69-75fb-469e-bc40-0b4b1220e964" />
+
 
 
 ## ✨ Features
