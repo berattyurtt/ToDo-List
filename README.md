@@ -25,4 +25,4 @@ Project Screenshot<img width="1366" height="602" alt="image" src="https://github
 
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/username/repo-name.git](https://github.com/username/repo-name.git)
+   git clone [https://github.com/berattyurtt/todo-list.git](https://github.com/berattyurtt/todo-list.git)
